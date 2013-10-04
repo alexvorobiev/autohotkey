@@ -1,12 +1,20 @@
-;#IfWinActive emacs  ; if in emacs
-+Capslock::Capslock ; make shift+Caps-Lock the Caps Lock toggle
-Capslock::Control   ; make Caps Lock the control button
-;#IfWinActive        ; end if in emacs
+; Remap CapsLock in Emacs
+;
+#IfWinActive ahk_class Emacs 
+{
+  +Capslock::Capslock ; make shift+Caps-Lock the Caps Lock toggle
+  Capslock::Control   ; make Caps Lock the control button
+}
 
-#`::Run c:\emacs\bin\emacsclientw.exe -n -e "(make-capture-frame)"
+#IfWinActive        ; end if in emacs
 
-
-^+F10::
+; Win-` creates application-depenedent org-mode link on the clipboard
+; and creates emacs frame with org-capture:
+;
+;  Chrome: [[url][page title]] selection
+;  Excel:  [[path][file name]] selection
+;
+#`::
   ClipSave := clipboard 
   Clipboard =           ; empty clipboard
   Send ^c               ; copy selection
@@ -31,9 +39,7 @@ Capslock::Control   ; make Caps Lock the control button
     xl := ComObjActive("Excel.Application")
     url := xl.ActiveWorkbook.FullName
     TitleClean := RegExReplace(Title,"(.*) - ")  ; remove Microsoft Excel... 
-
   }
-  ;MsgBox % "[[" . url . "][" . TitleClean . "]] sel"
 
   Clipboard := "[[" . url . "][" . TitleClean . "]] sel"
   Run c:\emacs\bin\emacsclientw.exe -n -e "(make-capture-frame)"
