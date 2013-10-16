@@ -18,7 +18,7 @@
   ClipSave := clipboard 
   Clipboard =           ; empty clipboard
   Send ^c               ; copy selection
-  ClipWait
+  ClipWait, 2
   sel := clipboard    ; save to variable
   Clipboard =           ; empty clipboard
   WinGetActiveTitle, Title ; get window title
@@ -31,7 +31,7 @@
     Send ^l               ; select
     Sleep 25
     Send ^c
-    ClipWait
+    ClipWait, 2
     url := clipboard
     TitleClean := RegExReplace(Title," - Google Chrome")
   
@@ -41,7 +41,7 @@
     TitleClean := RegExReplace(Title,"(.*) - ")  ; remove Microsoft Excel... 
   }
 
-  Clipboard := "[[" . url . "][" . TitleClean . "]] sel"
+  Clipboard := "[[" . url . "][" . TitleClean . "]]" . sel
   Run c:\emacs\bin\emacsclientw.exe -n -e "(make-capture-frame)"
 
 return
